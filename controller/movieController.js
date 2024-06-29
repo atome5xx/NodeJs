@@ -2,7 +2,7 @@ import MOVIE from "../models/movieModels.js";
 
 export const getAll = async (req, res) => {
     try {
-        const movies = await MOVIE.find({}, { _id: 0 }).exec(); // Supposant que vous utilisez Mongoose pour interroger MongoDB
+        const movies = await MOVIE.find({}, { _id: 0 }).exec();
         res.render('movies', { title: 'Liste des Films', movies });
     } catch (error) {
         res.status(500).send('Erreur lors de la récupération des films.');
@@ -83,11 +83,53 @@ export const updateMovie = async (req, res) => {
     }
 }
 
+export const addMovie = async (req, res) => {
+    try {
+        // Récupérer le plus grand ID
+        const idMaxDoc = await MOVIE.findOne({}, {}, { sort: { 'id': -1 } });
+        let movieId = 1; // Valeur par défaut si aucune entrée dans la base de données
+
+        if (idMaxDoc) {
+            movieId = idMaxDoc.id + 1; // Incrémenter l'ID maximal trouvé
+        }
+
+        // Récupérer les données du corps de la requête
+        const movieRating = req.body.rating;
+        const movieTitle = req.body.title;
+        const movieYear = req.body.year;
+        const movieActors = req.body.actors;
+
+        // Créer un nouveau film
+        const newMovie = new MOVIE({
+            id: movieId,
+            rating: movieRating,
+            title: movieTitle,
+            year: movieYear,
+            actors: movieActors
+        });
+
+        // Enregistrer le nouveau film dans la base de données
+        await newMovie.save();
+
+        // Répondre avec succès
+        res.redirect('/movies');
+    } catch (error) {
+        console.error('Erreur lors de la création du film :', error);
+        res.status(500).json({ message: "Erreur serveur lors de la création du film", error });
+    }
+}
+
+export const createFilm = async (req, res) => {
+    res.render('movieCreation');
+}
+
 const controller = {
     getAll,
     getById,
     deleteMovie,
     updateMovie,
+    addMovie,
+    createFilm,
 };
 
 export default controller;
