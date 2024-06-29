@@ -8,8 +8,8 @@
     <title>
         <%= title %>
     </title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <script src="script/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="/script/script.js"></script>
 </head>
 
 <body>
@@ -40,7 +40,7 @@
                         <%= movie.year %>
                     </td>
                     <td><a href="/movies/<%= movie.id %>">Voir détails</a></td>
-                    <td><button>Modifié</button></td>
+                    <td><a href="/movies/<%= movie.id %>&modif"><button>Modifié</button></a></td>
                     <td><button onclick="deleteMovie('<%= movie.id %>')">Supprimer</button></td>
                 </tr>
                 <% }) %>
