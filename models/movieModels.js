@@ -1,5 +1,5 @@
 
-import mongoose from 'mongoose';
+import mongoose from '../config/database.js';
 
 const Schema = mongoose.Schema;
 

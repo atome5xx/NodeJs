@@ -2,42 +2,48 @@ import MOVIE from "../models/movieModels.js";
 
 export const getAll = async (req, res) => {
     try {
-        console.log('Fetching all movies...');
-        const movies = await MOVIE.find({}, { _id: 0 }).exec();
-        console.log('Movies found:', movies);
-
-        if (!movies || movies.length === 0) {
-            console.log('No movies found.');
-            return res.status(404).json({ message: 'No movies found' });
-        }
-
-        res.status(200).json(movies);
+        const movies = await MOVIE.find({}, { _id: 0 }).exec(); // Supposant que vous utilisez Mongoose pour interroger MongoDB
+        res.render('movies', { title: 'Liste des Films', movies });
     } catch (error) {
-        console.error('Error fetching movies:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).send('Erreur lors de la récupération des films.');
     }
 }
 
 export const getById = async (req, res) => {
     const movieId = parseInt(req.params.id, 10);
     try {
-        console.log('Fetching one movies...');
         const movie = await MOVIE.findOne({ id: movieId }, { _id: 0 }).exec();
-        console.log('Movie found:', movie);
-        if (!movie || movie.length === 0) {
-            console.log('No movies found.');
-            return res.status(404).json({ message: 'Movie not found' });
+        if (movie) {
+            res.render('movieDetail', { title: `Détails du Film`, movie });
+        } else {
+            res.status(404).send('Film non trouvé.');
         }
-        res.status(200).json(movie);
     } catch (error) {
-        console.error('Error fetching movies:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).send('Erreur lors de la récupération du film.');
     }
 };
+
+export const deleteMovie = async (req, res) => {
+    console.log("delete appelé");
+    const movieId = parseInt(req.params.id, 10);
+    try {
+        const result = await MOVIE.deleteOne({ id: movieId }).exec();
+        // Vérifier si des films ont été supprimés
+        if (result.deletedCount === 0) {
+            return res.status(404).send('Aucun film trouvé.');
+        }
+
+        // Répondre avec succès
+        res.status(200).send('Films supprimés avec succès.');
+    } catch (error) {
+        res.status(500).send('Erreur lors de la supression du film.');
+    }
+}
 
 const controller = {
     getAll,
     getById,
+    deleteMovie,
 };
 
 export default controller;

@@ -1,0 +1,43 @@
+<!-- views/movieDetail.ejs -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+
+<body>
+    <h1>
+        <%= movie.title %>
+    </h1>
+    <div class="principal">
+        <div>
+            <p><U>Année</U>: <%= movie.year %>
+            </p>
+        </div>
+        <div>
+            <p><U>Note</U>:
+                <%= movie.rating %>
+            </p>
+        </div>
+        <div>
+            <p><U>Acteur</U> :
+            <ul>
+                <% movie.actors.forEach(actor=> { %>
+                    <li>
+                        <%= actor %>
+                    </li>
+                    <% }) %>
+            </ul>
+            </p>
+        </div>
+    </div>
+    <a href="/movies">Retour à l'ensemble des films</a>
+</body>
+
+</html>
