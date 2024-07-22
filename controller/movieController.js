@@ -3,9 +3,9 @@ import MOVIE from "../models/movieModels.js";
 export const getAll = async (req, res) => {
     try {
         const movies = await MOVIE.find({}, { _id: 0 }).exec();
-        res.render('movies', { title: 'Liste des Films', movies });
+        res.json(movies);
     } catch (error) {
-        res.status(500).send('Erreur lors de la récupération des films.');
+        res.status(500).json('Erreur lors de la récupération des films.');
     }
 }
 
@@ -25,13 +25,13 @@ export const getById = async (req, res) => {
             if (isModif) {
                 res.render('movieUpdate', { title: `Modification du Film`, movie });
             } else {
-                res.render('movieDetail', { title: `Détails du Film`, movie });
+                res.json(movie);
             }
         } else {
-            res.status(404).send('Film non trouvé.');
+            res.status(404).json('Film non trouvé.');
         }
     } catch (error) {
-        res.status(500).send('Erreur lors de la récupération du film.');
+        res.status(500).json('Erreur lors de la récupération du film.');
     }
 };
 
@@ -41,13 +41,13 @@ export const deleteMovie = async (req, res) => {
         const result = await MOVIE.deleteOne({ id: movieId }).exec();
         // Vérifier si des films ont été supprimés
         if (result.deletedCount === 0) {
-            return res.status(404).send('Aucun film trouvé.');
+            return res.status(404).json('Aucun film trouvé.');
         }
 
         // Répondre avec succès
-        res.status(200).send('Films supprimés avec succès.');
+        res.status(200).json('Films supprimés avec succès.');
     } catch (error) {
-        res.status(500).send('Erreur lors de la supression du film.');
+        res.status(500).json('Erreur lors de la supression du film.');
     }
 }
 
