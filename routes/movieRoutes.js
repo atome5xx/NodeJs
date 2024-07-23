@@ -6,6 +6,7 @@ import movieController from "../controller/movieController.js";
 
 router.get("/", movieController.getAll);
 router.get("/creationFilm", movieController.createFilm);
+router.get("/search", movieController.searchMovie);
 router.get("/:params", movieController.getById);
 router.delete("/:id", movieController.deleteMovie);
 router.put("/:id", movieController.updateMovie);

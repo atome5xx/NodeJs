@@ -35,6 +35,53 @@ export const getById = async (req, res) => {
     }
 };
 
+export const searchMovie = async (req, res) => {
+    try {
+        // Récupération des paramètres de requête
+        const { title, year, rating } = req.query;
+
+        // Création d'un objet de requête dynamique pour la recherche
+        const query = {};
+
+        if (title) {
+            // Ajout d'une condition de recherche pour le titre (insensible à la casse)
+            query.title = { $regex: new RegExp(title, 'i') };
+        }
+
+        if (year) {
+            // Ajout d'une condition de recherche pour l'année
+            const parsedYear = parseInt(year, 10);
+            if (!isNaN(parsedYear)) {
+                query.year = parsedYear;
+            } else {
+                return res.status(400).json('Année invalide.');
+            }
+        }
+
+        if (rating) {
+            // Ajout d'une condition de recherche pour la note
+            const parsedRating = parseFloat(rating);
+            if (!isNaN(parsedRating)) {
+                query.rating = parsedRating;
+            } else {
+                return res.status(400).json('Note invalide.');
+            }
+        }
+
+        // Recherche des films dans la base de données
+        const movies = await MOVIE.find(query).exec();
+
+        if (movies.length > 0) {
+            res.json(movies);
+        } else {
+            res.status(404).json('Aucun film correspondant trouvé.');
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération des films :', error);
+        res.status(500).json('Erreur lors de la récupération des films.');
+    }
+};
+
 export const deleteMovie = async (req, res) => {
     const movieId = parseInt(req.params.id, 10);
     try {
@@ -130,6 +177,7 @@ const controller = {
     updateMovie,
     addMovie,
     createFilm,
+    searchMovie,
 };
 
 export default controller;
