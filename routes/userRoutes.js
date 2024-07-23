@@ -8,6 +8,11 @@ import userController from "../controller/userController.js";
 //router.get('/profile', authMiddleware, getProfile);
 router.get('/', userController.getAll);
 router.get('/:id', userController.getProfile);
-router.post('/', userController.updateUser);
+router.put('/', userController.updateUser);
+router.delete("/:id", userController.deleteUser);
+router.post('/listeLecture/', userController.creerListeLecture);
+router.post('/listeLecture/:id', userController.ajouterFilmListeLecture);
+router.get('/listeLecture/:id', userController.afficherListeLecture);
+router.put('/listeLecture/:id', userController.modifierListeLecture);
 
 export default router;
