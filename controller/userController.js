@@ -223,6 +223,210 @@ export const modifierListeLecture = async (req, res) => {
   }
 }
 
+//favoris
+export const addFavorite = async (req, res) => {
+  console.log('Received request:', req.method, req.originalUrl);  // Log de la méthode et de l'URL
+
+  try {
+    // Récupération des IDs depuis le corps de la requête
+    const { userId, movieId } = req.body;
+
+    // Vérification de la validité des IDs
+    if (isNaN(userId) || isNaN(movieId)) {
+      return res.status(400).json('ID utilisateur ou ID film invalide.');
+    }
+
+    // Vérification si le film existe avec findOne
+    const movie = await MOVIE.findOne({ id: movieId });  // Utilisez `id` si c'est le champ unique
+    if (!movie) {
+      return res.status(404).json('Film non trouvé.');
+    }
+
+    // Vérification si l'utilisateur existe
+    const user = await USER.findOne({ id: userId });  // Utilisez `id` si c'est le champ unique
+    if (!user) {
+      return res.status(404).json('Utilisateur non trouvé.');
+    }
+
+    // Vérification si le film est déjà dans la liste des favoris
+    if (user.favoris.includes(movieId)) {
+      return res.status(400).json('Le film est déjà dans la liste des favoris.');
+    }
+
+    // Ajout du film aux favoris de l'utilisateur
+    user.favoris.push(movieId);
+    await user.save();
+
+    res.status(200).json('Film ajouté aux favoris avec succès.');
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout du film aux favoris :', error);
+    res.status(500).json('Erreur lors de l\'ajout du film aux favoris.');
+  }
+};
+
+////////////////////
+
+export const delFavorite = async (req, res) => {
+  console.log('Received request:', req.method, req.originalUrl);  // Log de la méthode et de l'URL
+
+  try {
+    // Récupération des IDs depuis le corps de la requête
+    const { userId, movieId } = req.body;
+
+    // Vérification de la validité des IDs
+    if (isNaN(userId) || isNaN(movieId)) {
+      return res.status(400).json('ID utilisateur ou ID film invalide.');
+    }
+
+    // Vérification si le film existe
+    const movie = await MOVIE.findOne({ id: movieId });
+    if (!movie) {
+      return res.status(404).json('Film non trouvé.');
+    }
+
+    // Vérification si l'utilisateur existe
+    const user = await USER.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json('Utilisateur non trouvé.');
+    }
+
+    // Vérification si le film est dans la liste des favoris de l'utilisateur
+    if (!user.favoris.includes(movieId)) {
+      return res.status(400).json('Le film n\'est pas dans la liste des favoris.');
+    }
+
+    // Suppression du film de la liste des favoris de l'utilisateur
+    user.favoris = user.favoris.filter(favId => favId !== movieId);
+    await user.save();
+
+    res.status(200).json('Film supprimé des favoris avec succès.');
+  } catch (error) {
+    console.error('Erreur lors de la suppression du film des favoris :', error);
+    res.status(500).json('Erreur lors de la suppression du film des favoris.');
+  }
+};
+
+////////////////////
+
+export const affFavoris = async (req, res) => {
+  try {
+    // Récupération de l'ID utilisateur depuis les paramètres de la requête
+    const userId = parseInt(req.params.id, 10);
+
+    // Vérification de la validité de l'ID utilisateur
+    if (isNaN(userId)) {
+      return res.status(400).json('ID utilisateur invalide.');
+    }
+
+    // Recherche de l'utilisateur dans la base de données
+    const user = await USER.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json('Utilisateur non trouvé.');
+    }
+
+    // Récupération des IDs des films dans les favoris de l'utilisateur
+    const movieIds = user.favoris;
+
+    if (movieIds.length === 0) {
+      return res.status(200).json('Aucun film dans la liste des favoris.');
+    }
+
+    // Récupération des détails des films
+    const movies = await MOVIE.find({ id: { $in: movieIds } });
+
+    // Extraction des titres des films
+    const movieTitles = movies.map(movie => movie.title);
+
+    // Retourner les titres des films
+    res.status(200).json({ favoris: movieTitles });
+  } catch (error) {
+    console.error('Erreur lors de l\'affichage des favoris :', error);
+    res.status(500).json('Erreur lors de l\'affichage des favoris.');
+  }
+};
+
+//Historique
+export const addHistorique = async (req, res) => {
+  console.log('Received request:', req.method, req.originalUrl);  // Log de la méthode et de l'URL
+
+  try {
+    // Récupération des IDs depuis le corps de la requête
+    const { userId, movieId } = req.body;
+
+    // Vérification de la validité des IDs
+    if (isNaN(userId) || isNaN(movieId)) {
+      return res.status(400).json('ID utilisateur ou ID film invalide.');
+    }
+
+    // Vérification si le film existe avec findOne
+    const movie = await MOVIE.findOne({ id: movieId });  // Utilisez `id` si c'est le champ unique
+    if (!movie) {
+      return res.status(404).json('Film non trouvé.');
+    }
+
+    // Vérification si l'utilisateur existe
+    const user = await USER.findOne({ id: userId });  // Utilisez `id` si c'est le champ unique
+    if (!user) {
+      return res.status(404).json('Utilisateur non trouvé.');
+    }
+
+    // Vérification si le film est déjà dans l'historique
+    if (user.historique.includes(movieId)) {
+      return res.status(400).json('Le film est déjà dans l\'historique.');
+    }
+
+    // Ajout du film à l'historique de l'utilisateur
+    user.historique.push(movieId);
+    await user.save();
+
+    res.status(200).json('Film ajouté à l\'historique avec succès.');
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout du film à l\'historique :', error);
+    res.status(500).json('Erreur lors de l\'ajout du film à l\'historique.');
+  }
+};
+
+////////////////////
+
+////////////////////
+
+export const affHistorique = async (req, res) => {
+  try {
+    // Récupération de l'ID utilisateur depuis les paramètres de la requête
+    const userId = parseInt(req.params.id, 10);
+
+    // Vérification de la validité de l'ID utilisateur
+    if (isNaN(userId)) {
+      return res.status(400).json('ID utilisateur invalide.');
+    }
+
+    // Recherche de l'utilisateur dans la base de données
+    const user = await USER.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json('Utilisateur non trouvé.');
+    }
+
+    // Récupération des IDs des films dans l'historique de l'utilisateur
+    const movieIds = user.historique;
+
+    if (movieIds.length === 0) {
+      return res.status(200).json('Aucun film dans l\'historique.');
+    }
+
+    // Récupération des détails des films
+    const movies = await MOVIE.find({ id: { $in: movieIds } });
+
+    // Extraction des titres des films
+    const movieTitles = movies.map(movie => movie.title);
+
+    // Retourner les titres des films
+    res.status(200).json({ historique: movieTitles });
+  } catch (error) {
+    console.error('Erreur lors de l\'affichage de l\'historique :', error);
+    res.status(500).json('Erreur lors de l\'affichage de l\'historique.');
+  }
+};
+
 const userController = {
   getAll,
   getProfile,
@@ -231,7 +435,12 @@ const userController = {
   creerListeLecture,
   ajouterFilmListeLecture,
   afficherListeLecture,
-  modifierListeLecture
+  modifierListeLecture,
+  addFavorite,
+  delFavorite,
+  affFavoris,
+  addHistorique,
+  affHistorique
 };
 
 export default userController;
