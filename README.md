@@ -39,6 +39,8 @@ Partie privee (Admin):
 - [ ] Consulter la liste des utilisateurs
 - [ ] Consulter le détail d'un utilisateur
 
+Une pagination 2 par 2 est possible pour afficher la liste des films.
+
 
 ## Description
 

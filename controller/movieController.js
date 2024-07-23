@@ -2,7 +2,17 @@ import MOVIE from "../models/movieModels.js";
 
 export const getAll = async (req, res) => {
     try {
-        const movies = await MOVIE.find({}, { _id: 0 }).exec();
+        // Récupérer le numéro de la page depuis les paramètres de la requête, par défaut à 1
+        const page = parseInt(req.query.page) || 1;
+        const limit = 2; // Limite à deux films par page
+        const skip = (page - 1) * limit; // Calculer le nombre de films à sauter
+
+        // Récupérer les films avec pagination
+        const movies = await MOVIE.find({}, { _id: 0 })
+            .skip(skip)
+            .limit(limit)
+            .exec();
+
         res.json(movies);
     } catch (error) {
         res.status(500).json('Erreur lors de la récupération des films.');
