@@ -1,6 +1,10 @@
+<<<<<<< Updated upstream
 import USER from "../models/userModels.js";
 import MOVIE from "../models/movieModels.js";
 //const bcrypt = require('bcryptjs');
+=======
+const User = require('../models/userModels.js');
+>>>>>>> Stashed changes
 
 export const getAll = async (req, res) => {
   try {
