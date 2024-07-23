@@ -1,5 +1,11 @@
+<<<<<<< Updated upstream
 import express from "express";
 
+=======
+const express = require('express');
+import { getProfile } from '../controller/userController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+>>>>>>> Stashed changes
 const router = express.Router();
 
 import userController from "../controller/userController.js";
