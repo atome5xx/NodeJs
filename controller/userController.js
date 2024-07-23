@@ -1,11 +1,27 @@
-const User = require('../models/userModels');
-const bcrypt = require('bcryptjs');
+import USER from "../models/userModels.js";
+//const bcrypt = require('bcryptjs');
+
+export const getAll = async (req, res) => {
+  try {
+    const users = await USER.find({}, { _id: 0 }).exec();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json('Erreur lors de la récupération des utilisateurs.');
+  }
+}
 
 // affiche les données d'un user
-exports.getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+  console.log(userId);
   try {
-    const user = await User.findById(req.user.id).select('-password');
-    res.json(user);
+    const user = await USER.findOne({ id: userId }, { _id: 0 }).exec();
+    console.log('User:', user);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json('Utilisateur non trouvé.');
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -20,7 +36,7 @@ export const updateUser = async (req, res) => {
   const userEmail = req.body.email;
   const userPassword = req.body.password;
   try {
-    const user = await UserSchema.findOne({ id: userId }, { _id: 0 }).exec();
+    const user = await USER.findOne({ id: userId }, { _id: 0 }).exec();
 
     if (user) {
       const misesAJour = {};
@@ -29,11 +45,11 @@ export const updateUser = async (req, res) => {
       if (userEmail !== undefined) misesAJour.email = userEmail;
       if (userPassword !== undefined) misesAJour.password = userPassword;
 
-      const result = await UserSchema.updateOne({ id: userId }, { $set: misesAJour });
+      const result = await USER.updateOne({ id: userId }, { $set: misesAJour });
 
-      if (result.nModified === 1) {
+      if (result.matchedCount === 1 && result.modifiedCount === 1) {
         res.status(200).json({ message: "Utilisateur mis à jour avec succès", data: result });
-      } else {
+      } else if (result.matchedCount === 1 && result.modifiedCount === 0) {
         res.status(200).json({ message: "Aucune modification effectuée" });
       }
     } else {
@@ -46,6 +62,7 @@ export const updateUser = async (req, res) => {
 }
 
 const userController = {
+  getAll,
   getProfile,
   updateUser
 };
