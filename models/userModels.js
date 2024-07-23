@@ -10,6 +10,11 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   favoris: [Number],
+  listeLecture: {
+    a_voir: [Number],  // Array of numbers for "to see"
+    vue: [Number],     // Array of numbers for "seen"
+    en_cours: [Number] // Array of numbers for "in progress"
+  },
 }, { collection: 'Users' });
 
 /*UserSchema.pre('save', async function (next) {
