@@ -15,6 +15,7 @@ const UserSchema = new Schema({
     vue: [Number],     // Array of numbers for "seen"
     en_cours: [Number] // Array of numbers for "in progress"
   },
+  historique: [Number],
 }, { collection: 'Users' });
 
 const USER = mongoose.model('Users', UserSchema);

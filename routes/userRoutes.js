@@ -6,6 +6,8 @@ import userController from "../controller/userController.js";
 //router.get('/profile', authMiddleware, getProfile);
 router.get('/', userController.getAll);
 router.get('/:id', userController.getProfile);
+//route pour l'admin
+router.get('/admin/:id', userController.getProfile);
 router.put('/', userController.updateUser);
 router.delete("/Favoris", userController.delFavorite);
 router.delete("/:id", userController.deleteUser);
@@ -15,5 +17,7 @@ router.get('/listeLecture/:id', userController.afficherListeLecture);
 router.put('/listeLecture/:id', userController.modifierListeLecture);
 router.post('/Favoris', userController.addFavorite);
 router.get('/Favoris/:id', userController.affFavoris);
+router.post('/Historique', userController.addHistorique);
+router.get('/Historique/:id', userController.affHistorique);
 
 export default router;
