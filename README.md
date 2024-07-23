@@ -1,6 +1,6 @@
-#Gestion des films et utilisateur en Node Js
+# Gestion des films et utilisateur en Node Js
 
-##Description
+## Description
 Notre git est un projet Node js. Il permet de lire dans une base de données mongoDB. Il va gérer des utilisateurs ainsi que des films. Certaines fonctions ne pourront être effectué que si vous êtes connecter.
 
 Il y a deux types d'authentification, admin et utilisateurs.
