@@ -26,12 +26,12 @@ export const register = async (req, res) => {
     const id = counter.seq;
 
     user = new USER({
-        id,
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        favoris, // Utilisation de la variable favoris
+      id,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      favoris, // Utilisation de la variable favoris
     });
 
     await user.save();
@@ -84,6 +84,7 @@ export const login = async (req, res) => {
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
+      res.header('Authorization', 'Bearer ' + token);
       res.json({ token });
     });
   } catch (err) {

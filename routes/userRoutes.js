@@ -1,12 +1,13 @@
 import express from "express";
 const router = express.Router();
 import userController from "../controller/userController.js";
+import security from "../middleware/authMiddleware.js";
 //const authMiddleware = require('../middleware/authMiddleware');
 
 //router.get('/profile', authMiddleware, getProfile);
-router.get('/', userController.getAll);
+router.get('/', security, userController.getAll);
 router.get('/:id', userController.getProfile);
-//route pour l'admin
+//route admin
 router.get('/admin/:id', userController.getProfile);
 router.put('/', userController.updateUser);
 router.delete("/Favoris", userController.delFavorite);
@@ -17,7 +18,5 @@ router.get('/listeLecture/:id', userController.afficherListeLecture);
 router.put('/listeLecture/:id', userController.modifierListeLecture);
 router.post('/Favoris', userController.addFavorite);
 router.get('/Favoris/:id', userController.affFavoris);
-router.post('/Historique', userController.addHistorique);
-router.get('/Historique/:id', userController.affHistorique);
 
 export default router;
