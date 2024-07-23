@@ -44,31 +44,36 @@ Partie privee (Admin):
 
 Notre utilisateur contient:
 
--Un id
--Un prénom
--Un nom
--Un email
--Un mdp hasher dans la bdd
--Une liste de favoris
--Une liste de Liste de lecture
--Une liste d'historique
+-Un id<br/>
+-Un prénom<br/>
+-Un nom<br/>
+-Un email<br/>
+-Un mdp hasher dans la bdd<br/>
+-Une liste de favoris<br/>
+-Une liste de Liste de lecture<br/>
+-Une liste d'historique<br/>
 
 Les films contiennent:
 
--Un id
--Un titre
--Une année de parution
--Une note critique
--Une liste d'acteur
+-Un id<br/>
+-Un titre<br/>
+-Une année de parution<br/>
+-Une note critique<br/>
+-Une liste d'acteur<br/>
 
 ## Instalation
 
 Pour installer le projet, suiver les étapes suivantes : 
-    -installer les dépendances:
-    ```npm install express express-validator jsonwebtoken mongoose nodemon swagger-jsdoc swagger-ui-express bcrypt bcryptjs dotenv ejs```
 
-    -Importer la base de données forunis avec le projet dans votre serveur
-        vous pouvez créer des utilisateurs mais pas des admins.
+-installer les dépendances:
+
+        npm install express express-validator jsonwebtoken mongoose nodemon swagger-jsdoc swagger-ui-express bcrypt bcryptjs dotenv ejs
+
+Importer la base de données forunis avec le projet dans votre serveur
+
+Vous pouvez créer des utilisateurs mais pas des admins.
         Pour vous connectez en tant qu'admin utiliser les identifiants suivants:
-        id:
-        mdp:
+
+            id:
+            mdp:
+
