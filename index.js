@@ -4,6 +4,7 @@ dotenv.config(); // Doit être appelé avant tout autre code
 import movieRoutes from "./routes/movieRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from './routes/authRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 
 const PORT = 3000;
@@ -20,6 +21,7 @@ app.use(express.static('public'));
 app.use("/movies", movieRoutes);
 app.use("/users", userRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 app.listen(PORT, () => {
