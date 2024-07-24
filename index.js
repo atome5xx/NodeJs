@@ -6,6 +6,9 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
+import swaggerJsdoc from "swagger-jsdoc" ;
+import swaggerUi from "swagger-ui-express";
+
 
 const PORT = 3000;
 
@@ -22,6 +25,35 @@ app.use("/movies", movieRoutes);
 app.use("/users", userRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+
+
+
+/////////
+// Configuration Swagger
+const swaggerOptions = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'API Documentation',
+        version: '1.0.0',
+        description: 'Documentation de l\'API pour gérer l\'authentification et les utilisateurs',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Serveur de développement',
+        },
+      ],
+    },
+    apis: ['./routes/*.js'], // Mettre à jour le chemin selon vos fichiers de routes
+  };
+  
+  const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+  
+  // Exposer Swagger UI
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+//////////////
+
 
 
 app.listen(PORT, () => {
