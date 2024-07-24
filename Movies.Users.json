@@ -1,0 +1,59 @@
+[{
+  "_id": {
+    "$oid": "669fb135f7ad81cb751d1c3e"
+  },
+  "id": 1,
+  "firstName": "Thomassss",
+  "lastName": "RODREGEZ",
+  "email": "thomasedddde@example.com",
+  "password": "$2a$10$1MjNdJk.DyT6/9.A4qFLLOdFD5aEZvEOjKOCEpmAbvYQF2yVVU1kK",
+  "isAdmin": false,
+  "favoris": [],
+  "listeLecture": {
+    "a_voir": [],
+    "vue": [],
+    "en_cours": []
+  },
+  "historique": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669fb158f7ad81cb751d1c43"
+  },
+  "id": 2,
+  "firstName": "Thomassss",
+  "lastName": "RODREGEZ",
+  "email": "thomaseddde@example.com",
+  "password": "$2a$10$.eoM/hjNBzvGjnzIpy8OX.NFIWb49VqBdgEALdNEl9EVTtIhpp/Vm",
+  "isAdmin": false,
+  "favoris": [
+    2
+  ],
+  "listeLecture": {
+    "a_voir": [],
+    "vue": [],
+    "en_cours": []
+  },
+  "historique": [],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "66a0a7caa3f6e6098b1b9e9c"
+  },
+  "id": 3,
+  "firstName": "Thomas",
+  "lastName": "Letoublon",
+  "email": "thomasee@gmail.com",
+  "password": "$2a$10$TbdhvpzX3kxAAM1wWsMP1OezKNLMlEnEiMTgZxC1NyT5mjYB60ci6",
+  "isAdmin": true,
+  "favoris": [],
+  "listeLecture": {
+    "a_voir": [],
+    "vue": [],
+    "en_cours": []
+  },
+  "historique": [],
+  "__v": 0
+}]

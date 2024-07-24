@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "667ff98ec5ca6c41ce210f21"
+  },
+  "id": 2,
+  "title": "The Matrix",
+  "year": 1999,
+  "rating": 4.7,
+  "actors": [
+    "Keanu Reeves",
+    "Laurence Fishburne",
+    "Carrie-Anne Moss",
+    "Hugo Weaving"
+  ]
+},
+{
+  "_id": {
+    "$oid": "667ff998c5ca6c41ce210f23"
+  },
+  "id": 3,
+  "title": "Inception",
+  "year": 2010,
+  "rating": 4.8,
+  "actors": [
+    "Leonardo DiCaprio",
+    "Joseph Gordon-Levitt",
+    "Ellen Page",
+    "Tom Hardy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "667ff9a3c5ca6c41ce210f25"
+  },
+  "id": 4,
+  "title": "Interstellar",
+  "year": 2014,
+  "rating": 4.6,
+  "actors": [
+    "Matthew McConaughey",
+    "Anne Hathaway",
+    "Jessica Chastain",
+    "Michael Caine"
+  ]
+},
+{
+  "_id": {
+    "$oid": "667ff9aec5ca6c41ce210f27"
+  },
+  "id": 5,
+  "title": "Blade Runner 2049",
+  "year": 2017,
+  "rating": 4.1,
+  "actors": [
+    "Ryan Gosling",
+    "Harrison Ford",
+    "Ana de Armas",
+    "Jared Leto"
+  ]
+}]
