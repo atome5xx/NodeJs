@@ -1,6 +1,7 @@
 import USER from '../models/userModels.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import logger from "../config/logger.js";
 
 // Fonction d'inscription
 export const register = async (req, res) => {
@@ -9,6 +10,7 @@ export const register = async (req, res) => {
   try {
     let user = await USER.findOne({ email });
     if (user) {
+      logger.warn(`Registration attempt with existing email: ${email}`);
       return res.status(400).json({ msg: 'User already exists' });
     }
 
@@ -30,55 +32,61 @@ export const register = async (req, res) => {
       },
     };
 
-    // Vérifiez si JWT_SECRET est défini
     if (!process.env.JWT_SECRET) {
+      logger.error('JWT secret is not defined');
       return res.status(500).json({ msg: 'JWT secret is not defined' });
     }
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) {
-        console.error('JWT Signing Error:', err.message);
+        logger.error(`JWT Signing Error: ${err.message}`);
         return res.status(500).send('Server error');
       }
+      logger.info(`User registered successfully: ${email}, ID: ${user.id}`);
       res.json({ token });
     });
   } catch (err) {
-    console.error('Registration Error:', err.message);
+    logger.error(`Registration Error: ${err.message}`);
     res.status(500).send('Server error');
   }
 };
 
 // Fonction de connexion
 export const login = async (req, res) => {
-    const { email, password } = req.body;
-    console.log('Login attempt with email:', email);  
-    try {
-      const user = await USER.findOne({ email: email }).exec();
-      console.log('User found:', user); 
-      if (!user) {
-        return res.status(400).json({ msg: 'Invalid Credentials' });
-      }
-  
-      const isMatch = await bcrypt.compare(password, user.password);
-      console.log('Password match:', isMatch);  
-      if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid Credentials' });
-      }
-  
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
-  
-      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+  const { email, password } = req.body;
+  logger.info(`Login attempt with email: ${email}`);
+
+  try {
+    const user = await USER.findOne({ email: email }).exec();
+    if (!user) {
+      logger.warn(`Login failed: Invalid credentials for email: ${email}`);
+      return res.status(400).json({ msg: 'Invalid Credentials' });
     }
-  };
-  
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      logger.warn(`Login failed: Invalid credentials for email: ${email}`);
+      return res.status(400).json({ msg: 'Invalid Credentials' });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+      if (err) {
+        logger.error(`JWT Signing Error: ${err.message}`);
+        throw err;
+      }
+      logger.info(`User logged in successfully: ${email}, ID: ${user.id}`);
+      res.json({ token });
+    });
+  } catch (err) {
+    logger.error(`Login Error: ${err.message}`);
+    res.status(500).send('Server error');
+  }
+};
+
 export default login;
