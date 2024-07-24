@@ -1,5 +1,3 @@
-import USER from '../models/userModels.js';
-
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -18,7 +16,7 @@ export const checkAmin = async (req, res, next) => {
     // Décoder et vérifier le token
     const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
 
-    if ( decoded.user.isAdmin !== true) {
+    if (decoded.user.isAdmin !== true) {
       res.status(403).json({ message: 'Accès refusé: Vous devez être administrateur pour accéder à cette ressource.' });
     }
 

@@ -3,13 +3,14 @@ const router = express.Router();
 import userController from "../controller/userController.js";
 import security from "../middleware/authMiddleware.js";
 import securityId from "../middleware/idMiddleware.js";
+import securityAdmin from "../middleware/adminMiddleware.js";
 //const authMiddleware = require('../middleware/authMiddleware');
 
 //router.get('/profile', authMiddleware, getProfile);
-router.get('/', userController.getAll);
+router.get('/', securityAdmin, userController.getAll);
 router.get('/:id', security, securityId, userController.getProfile);
 //route admin
-router.get('/admin/:id', userController.getProfile);
+router.get('/admin/:id', securityAdmin, userController.getProfile);
 router.put('/', security, securityId, userController.updateUser);
 router.delete("/Favoris", security, securityId, userController.delFavorite);
 router.delete("/:id", security, securityId, userController.deleteUser);

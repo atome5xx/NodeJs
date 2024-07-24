@@ -229,7 +229,9 @@ export const addFavorite = async (req, res) => {
 
   try {
     // Récupération des IDs depuis le corps de la requête
-    const { userId, movieId } = req.body;
+    //const { id, movieId } = req.body;
+    const userId = req.body.id;
+    const movieId = req.body.movieId;
 
     // Vérification de la validité des IDs
     if (isNaN(userId) || isNaN(movieId)) {
@@ -271,7 +273,9 @@ export const delFavorite = async (req, res) => {
 
   try {
     // Récupération des IDs depuis le corps de la requête
-    const { userId, movieId } = req.body;
+    //const { userId, movieId } = req.body;
+    const userId = req.body.id;
+    const movieId = req.body.movieId;
 
     // Vérification de la validité des IDs
     if (isNaN(userId) || isNaN(movieId)) {
@@ -351,7 +355,9 @@ export const addHistorique = async (req, res) => {
 
   try {
     // Récupération des IDs depuis le corps de la requête
-    const { userId, movieId } = req.body;
+    //const { userId, movieId } = req.body;
+    const userId = req.body.id;
+    const movieId = req.body.movieId;
 
     // Vérification de la validité des IDs
     if (isNaN(userId) || isNaN(movieId)) {
