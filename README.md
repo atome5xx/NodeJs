@@ -84,11 +84,15 @@ Pour cela créer une base de données Movies et importer les trois fichier json 
 
 Pour démarrer votre projet il faut ecrire:
 
+
         npm run dev
+
 
 Vous pouvez créer des utilisateurs mais pas des admins.
         Pour vous connectez en tant qu'admin utiliser les identifiants suivants:
 
+
             email: thomasee@gmail.com
+
             mdp: pass1234
 
