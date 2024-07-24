@@ -71,6 +71,8 @@ A chaque action effectuée (recherche, connexion, ajout/suppresion d'élément �
         - access.log (Logs des actions)
         - error.log (Logs des erreurs)
 
+Les fichiers de logs créés se trouvent à la racine du projet
+
 ## Instalation
 
 Pour installer le projet, suiver les étapes suivantes : 
