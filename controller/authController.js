@@ -2,14 +2,16 @@ import USER from '../models/userModels.js';
 import Counter from '../models/counterModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import logger from "../config/logger.js";
 
 // Fonction d'inscription
 export const register = async (req, res) => {
-  const { firstName, lastName, email, password, favoris = [] } = req.body; // Ajout de favoris avec une valeur par défaut vide
+  const { firstName, lastName, email, password, favoris = [] } = req.body;
 
   try {
     let user = await USER.findOne({ email });
     if (user) {
+      logger.warn(`Inscription échouée : l'utilisateur avec l'email ${email} existe déjà.`);
       return res.status(400).json({ msg: 'User already exists' });
     }
 
@@ -31,7 +33,7 @@ export const register = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      favoris, // Utilisation de la variable favoris
+      favoris,
     });
 
     await user.save();
@@ -39,23 +41,24 @@ export const register = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        isAdmin : user.isAdmin,
+        isAdmin: user.isAdmin,
       },
     };
 
     if (!process.env.JWT_SECRET) {
+      logger.error('JWT secret is not defined.');
       return res.status(500).json({ msg: 'JWT secret is not defined' });
     }
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) {
-        console.error('JWT Signing Error:', err.message);
+        logger.error('JWT Signing Error:', err.message);
         return res.status(500).send('Server error');
       }
       res.json({ token });
     });
   } catch (err) {
-    console.error('Registration Error:', err.message);
+    logger.error('Registration Error:', err.message);
     res.status(500).send('Server error');
   }
 };
@@ -63,17 +66,17 @@ export const register = async (req, res) => {
 // Fonction de connexion
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log('Login attempt with email:', email);
+
   try {
-    const user = await USER.findOne({ email: email }).exec();
-    console.log('User found:', user);
+    const user = await USER.findOne({ email }).exec();
     if (!user) {
+      logger.warn(`Connexion échouée : utilisateur non trouvé pour l'email ${email}.`);
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match:', isMatch);
     if (!isMatch) {
+      logger.warn(`Connexion échouée : mot de passe incorrect pour l'utilisateur ${email}.`);
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
 
@@ -85,14 +88,20 @@ export const login = async (req, res) => {
     };
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-      if (err) throw err;
+      if (err) {
+        logger.error('JWT Signing Error:', err.message);
+        return res.status(500).send('Server error');
+      }
       res.header('Authorization', 'Bearer ' + token);
       res.json({ token });
     });
   } catch (err) {
-    console.error(err.message);
+    logger.error('Login Error:', err.message);
     res.status(500).send('Server error');
   }
 };
 
-export default login;
+export default {
+  register,
+  login,
+};

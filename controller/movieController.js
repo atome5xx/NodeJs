@@ -1,11 +1,13 @@
 import MOVIE from "../models/movieModels.js";
+import logger from "../config/logger.js"; // Assurez-vous que ce chemin est correct
 
 export const getAll = async (req, res) => {
     try {
         // Récupérer le numéro de la page depuis les paramètres de la requête, par défaut à 1
-        const page = parseInt(req.query.page) || 1;
+        const page = parseInt(req.query.page, 10) || 1;
         const limit = 2; // Limite à deux films par page
         const skip = (page - 1) * limit; // Calculer le nombre de films à sauter
+
 
         // Récupérer les films avec pagination
         const movies = await MOVIE.find({}, { _id: 0 })
@@ -15,7 +17,11 @@ export const getAll = async (req, res) => {
 
         res.json(movies);
     } catch (error) {
-        res.status(500).json('Erreur lors de la récupération des films.');
+        // Log de l'erreur
+        logger.error('Erreur lors de la récupération des films:', error);
+
+        // Réponse au client avec message d'erreur
+        res.status(500).json({ message: 'Erreur lors de la récupération des films.', error: error.message });
     }
 }
 
@@ -27,23 +33,28 @@ export const getById = async (req, res) => {
     const [idPart, modifPart] = params.split('&');
     const movieId = parseInt(idPart, 10);
     const isModif = modifPart === 'modif';
+
     try {
-        //je regarde si le film existe dans la bdd
+        // Je regarde si le film existe dans la BDD
         const movie = await MOVIE.findOne({ id: movieId }, { _id: 0 }).exec();
         if (movie) {
-            //je regarde si il y a un parametre modif dans l'url
+            // Je regarde si il y a un paramètre modif dans l'URL
             if (isModif) {
                 res.render('movieUpdate', { title: `Modification du Film`, movie });
             } else {
                 res.json(movie);
             }
         } else {
+            logger.warn(`Film avec ID ${movieId} non trouvé.`);
             res.status(404).json('Film non trouvé.');
         }
     } catch (error) {
+        // Log de l'erreur
+        logger.error('Erreur lors de la récupération du film:', error);
         res.status(500).json('Erreur lors de la récupération du film.');
     }
 };
+
 
 export const searchMovie = async (req, res) => {
     try {
@@ -54,12 +65,10 @@ export const searchMovie = async (req, res) => {
         const query = {};
 
         if (title) {
-            // Ajout d'une condition de recherche pour le titre (insensible à la casse)
             query.title = { $regex: new RegExp(title, 'i') };
         }
 
         if (year) {
-            // Ajout d'une condition de recherche pour l'année
             const parsedYear = parseInt(year, 10);
             if (!isNaN(parsedYear)) {
                 query.year = parsedYear;
@@ -69,7 +78,6 @@ export const searchMovie = async (req, res) => {
         }
 
         if (rating) {
-            // Ajout d'une condition de recherche pour la note
             const parsedRating = parseFloat(rating);
             if (!isNaN(parsedRating)) {
                 query.rating = parsedRating;
@@ -87,7 +95,8 @@ export const searchMovie = async (req, res) => {
             res.status(404).json('Aucun film correspondant trouvé.');
         }
     } catch (error) {
-        console.error('Erreur lors de la récupération des films :', error);
+        // Log de l'erreur
+        logger.error('Erreur lors de la récupération des films:', error);
         res.status(500).json('Erreur lors de la récupération des films.');
     }
 };
@@ -96,17 +105,19 @@ export const deleteMovie = async (req, res) => {
     const movieId = parseInt(req.params.id, 10);
     try {
         const result = await MOVIE.deleteOne({ id: movieId }).exec();
-        // Vérifier si des films ont été supprimés
+
         if (result.deletedCount === 0) {
+            logger.warn(`Aucun film trouvé pour l'ID ${movieId}.`);
             return res.status(404).json('Aucun film trouvé.');
         }
 
-        // Répondre avec succès
-        res.status(200).json('Films supprimés avec succès.');
+        res.status(200).json('Film supprimé avec succès.');
     } catch (error) {
-        res.status(500).json('Erreur lors de la supression du film.');
+        // Log de l'erreur
+        logger.error('Erreur lors de la suppression du film:', error);
+        res.status(500).json('Erreur lors de la suppression du film.');
     }
-}
+};
 
 export const updateMovie = async (req, res) => {
     const movieId = req.body.id;
@@ -114,6 +125,7 @@ export const updateMovie = async (req, res) => {
     const movieTitle = req.body.title;
     const movieYear = req.body.year;
     const movieActors = req.body.actors;
+    
     try {
         const movie = await MOVIE.findOne({ id: movieId }, { _id: 0 }).exec();
 
@@ -135,19 +147,20 @@ export const updateMovie = async (req, res) => {
             res.status(404).json({ message: "Film non trouvé" });
         }
     } catch (error) {
-        console.error('Erreur lors de la mise à jour du film :', error);
+        // Log de l'erreur
+        logger.error('Erreur lors de la mise à jour du film:', error);
         res.status(500).json({ message: "Erreur serveur lors de la mise à jour du film", error });
     }
-}
+};
 
 export const addMovie = async (req, res) => {
     try {
         // Récupérer le plus grand ID
         const idMaxDoc = await MOVIE.findOne({}, {}, { sort: { 'id': -1 } });
-        let movieId = 1; // Valeur par défaut si aucune entrée dans la base de données
+        let movieId = 1;
 
         if (idMaxDoc) {
-            movieId = idMaxDoc.id + 1; // Incrémenter l'ID maximal trouvé
+            movieId = idMaxDoc.id + 1;
         }
 
         // Récupérer les données du corps de la requête
@@ -168,17 +181,24 @@ export const addMovie = async (req, res) => {
         // Enregistrer le nouveau film dans la base de données
         await newMovie.save();
 
-        // Répondre avec succès
         res.redirect('/movies');
     } catch (error) {
-        console.error('Erreur lors de la création du film :', error);
+        // Log de l'erreur
+        logger.error('Erreur lors de la création du film:', error);
         res.status(500).json({ message: "Erreur serveur lors de la création du film", error });
     }
-}
+};
 
 export const createFilm = async (req, res) => {
-    res.render('movieCreation');
-}
+    try {
+        res.render('movieCreation');
+    } catch (error) {
+        // Log de l'erreur
+        logger.error('Erreur lors de l\'affichage du formulaire de création de film:', error);
+        res.status(500).json('Erreur lors de l\'affichage du formulaire de création de film.');
+    }
+};
+
 
 const controller = {
     getAll,
