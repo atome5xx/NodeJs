@@ -7,7 +7,8 @@ Il y a deux types d'authentification, admin et utilisateurs.
 
 ## Table des Matières
 - [Fonctionnalitées](#fonctionnalité)
-- [Description bdd](#description)
+- [Description](#description)
+- [Logs](#logs)
 - [Installation](#installation)
 
 ## Fonctionnalitées
@@ -63,19 +64,31 @@ Les films contiennent:
 -Une note critique<br/>
 -Une liste d'acteur<br/>
 
+## Logs
+
+A chaque action effectuée (recherche, connexion, ajout/suppresion d'élément à une liste...) ou erreur renvoyée par l'application, Des logs seront écris dans des fichiers correspondants :
+
+        - access.log (Logs des actions)
+        - error.log (Logs des erreurs)
+
 ## Instalation
 
 Pour installer le projet, suiver les étapes suivantes : 
 
 -installer les dépendances:
 
-        npm install express express-validator jsonwebtoken mongoose nodemon swagger-jsdoc swagger-ui-express bcrypt bcryptjs dotenv ejs
+        npm install express express-validator jsonwebtoken mongoose nodemon swagger-jsdoc swagger-ui-express bcrypt bcryptjs dotenv ejs winston
 
-Importer la base de données forunis avec le projet dans votre serveur
+Importer la base de données forunis avec le projet dans votre serveur.
+Pour cela créer une base de données Movies et importer les trois fichier json qui correspondent chacun à une collection
+
+Pour démarrer votre projet il faut ecrire:
+
+        npm run dev
 
 Vous pouvez créer des utilisateurs mais pas des admins.
         Pour vous connectez en tant qu'admin utiliser les identifiants suivants:
 
-            id:
-            mdp:
+            email: thomasee@gmail.com
+            mdp: pass1234
 
