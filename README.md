@@ -71,11 +71,12 @@ Pour installer le projet, suiver les étapes suivantes :
 
         npm install express express-validator jsonwebtoken mongoose nodemon swagger-jsdoc swagger-ui-express bcrypt bcryptjs dotenv ejs
 
-Importer la base de données forunis avec le projet dans votre serveur
+Importer la base de données forunis avec le projet dans votre serveur.
+Pour cela, créer une base nommé Movies et importer les trois fichier json.
 
 Vous pouvez créer des utilisateurs mais pas des admins.
         Pour vous connectez en tant qu'admin utiliser les identifiants suivants:
 
-            id:
-            mdp:
+            id: thomasee@gmail.com
+            mdp: pass1234
 
